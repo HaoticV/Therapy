@@ -18,6 +18,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".description.ActivityDescription" />
+        <activity android:name=".add.AddActivity"
+                  android:label="Dodaj lek"/>
     </application>
-
+    <uses-feature android:name="android.hardware.camera"
+        android:required="false" />
 </manifest>

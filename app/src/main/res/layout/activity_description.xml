@@ -8,11 +8,13 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
+
     <TextView
-        android:text="TextView"
         android:id="@+id/nazwa"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:textSize="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
 
     <ImageView
         android:id="@+id/obraz"
@@ -20,7 +22,8 @@
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/apple" />
     <TextView
-        android:text="TextViwe"
+        android:text="TextView"
+        android:textSize="20sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/opis"/>

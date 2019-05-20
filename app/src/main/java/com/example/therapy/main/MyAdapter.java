@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private final ArrayList<Pair<Integer, String>> arrayList;
-    private final GoToAvtivityable mainActivity;
+    private final goToActivityable mainActivity;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView textView;
@@ -28,7 +28,7 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         }
     }
 
-    public MyAdapter(ArrayList<Pair<Integer, String>> arrayList, GoToAvtivityable mainActivity) {
+    public MyAdapter(ArrayList<Pair<Integer, String>> arrayList, goToActivityable mainActivity) {
         this.arrayList = arrayList;
         this.mainActivity = mainActivity;
     }

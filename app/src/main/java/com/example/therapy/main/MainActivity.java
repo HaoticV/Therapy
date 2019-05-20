@@ -1,19 +1,25 @@
 package com.example.therapy.main;
 
+import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
+import com.example.therapy.add.AddActivity;
+import com.example.therapy.database.DrugsDatabase;
 import com.example.therapy.description.ActivityDescription;
 import com.example.therapy.MyApp;
 import com.example.therapy.R;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements GoToAvtivityable {
+public class MainActivity extends AppCompatActivity implements goToActivityable {
+    private DrugsDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +39,18 @@ public class MainActivity extends AppCompatActivity implements GoToAvtivityable 
         recyclerView.setLayoutManager(layoutManager);
         RecyclerView.Adapter mAdapter = new MyAdapter(arrayList, this);
         recyclerView.setAdapter(mAdapter);
+
+        mDb = DrugsDatabase.getInMemoryDatabase(getApplicationContext());
+
+        FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, AddActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override
@@ -41,4 +59,5 @@ public class MainActivity extends AppCompatActivity implements GoToAvtivityable 
         intent.putExtra("id", id);
         startActivity(intent);
     }
+
 }
