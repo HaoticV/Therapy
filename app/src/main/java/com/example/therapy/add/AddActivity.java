@@ -106,7 +106,7 @@ public class AddActivity extends AppCompatActivity {
     protected Dialog createdDialog(int id) {
         switch (id) {
             case TIME_DIALOG_ID:
-                return new TimePickerDialog(this, timePickerListener, hr, min, false);
+                return new TimePickerDialog(this, timePickerListener, hr, min, true);
         }
         return null;
     }
@@ -121,29 +121,14 @@ public class AddActivity extends AppCompatActivity {
         }
     };
 
-    private static String utilTime(int value) {
-        if (value < 10) return "0" + String.valueOf(value);
-        else return String.valueOf(value);
-    }
 
     private void updateTime(int hours, int mins) {
-        String timeSet = "";
-        if (hours > 12) {
-            hours -= 12;
-            timeSet = "PM";
-        } else if (hours == 0) {
-            hours += 12;
-            timeSet = "AM";
-        } else if (hours == 12)
-            timeSet = "PM";
-        else
-            timeSet = "AM";
-        String minutes = "";
+        String minutes;
         if (mins < 10)
             minutes = "0" + mins;
         else
             minutes = String.valueOf(mins);
-        String aTime = new StringBuilder().append(hours).append(':').append(minutes).append(" ").append(timeSet).toString();
+        String aTime = new StringBuilder().append(hours).append(':').append(minutes).toString();
         view.setText(aTime);
     }
 }
