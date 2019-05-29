@@ -3,10 +3,12 @@ package com.example.therapy.database;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 @Entity(tableName = "drug")
 public class Drug {
     @PrimaryKey(autoGenerate = true)
+    @NonNull
     private int drugId;
     @ColumnInfo(name = "name")
     private String drugName;
