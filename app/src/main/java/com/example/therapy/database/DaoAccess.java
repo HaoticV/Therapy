@@ -1,6 +1,10 @@
 package com.example.therapy.database;
 
-import android.arch.persistence.room.*;
+import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
+import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import java.util.List;
 
@@ -8,14 +12,18 @@ import java.util.List;
 public interface DaoAccess {
 
     @Insert
-    void insertOnlySingleDrug (Drugs drugs);
+    void insertOnlySingleDrug(Drug drug);
     @Insert
-    void insertMultipleDrugs (List<Drugs> drugsList);
-    @Query ("SELECT * FROM Drugs WHERE drugId = :drugId")
-    Drugs fetchOneDrugbyDrugId (int drugId);
+    void insertMultipleDrugs(List<Drug> drugsList);
+
+    @Query("SELECT * FROM drug WHERE drugId = :drugId")
+    Drug fetchOneDrugbyDrugId(int drugId);
+
+    @Query("SELECT * FROM drug WHERE name LIKE :name LIMIT 1")
+    Drug findByName(String name);
     @Update
-    void updateDrug (Drugs drugs);
+    void updateDrug(Drug drug);
     @Delete
-    void deleteDrug (Drugs drugs);
+    void deleteDrug(Drug drug);
 }
 

@@ -1,9 +1,11 @@
 package com.example.therapy.database;
 
-import android.arch.persistence.room.*;
+import android.arch.persistence.room.Database;
+import android.arch.persistence.room.Room;
+import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
-@Database(entities = {Drugs.class}, version = 1, exportSchema = false)
+@Database(entities = {Drug.class}, version = 4, exportSchema = false)
 public abstract class DrugsDatabase extends RoomDatabase{
 
     public abstract DaoAccess daoAccess();
@@ -15,8 +17,8 @@ public abstract class DrugsDatabase extends RoomDatabase{
     public static DrugsDatabase getInMemoryDatabase(Context context) {
         if (INSTANCE == null) {
             INSTANCE =
-                    Room.inMemoryDatabaseBuilder(context.getApplicationContext(), DrugsDatabase.class)
-                            .allowMainThreadQueries()
+                    Room.databaseBuilder(context.getApplicationContext(), DrugsDatabase.class, DATABASE_NAME)
+                            .allowMainThreadQueries().fallbackToDestructiveMigration()
                             .build();
         }
         return INSTANCE;

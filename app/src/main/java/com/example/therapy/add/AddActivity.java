@@ -16,89 +16,87 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.therapy.R;
+import com.example.therapy.database.Drug;
+import com.example.therapy.database.DrugsDatabase;
 
 import java.util.Calendar;
 
 public class AddActivity extends AppCompatActivity {
-
-    public static final int PICK_IMAGE = 1;
+    static final int PICK_IMAGE = 1;
     static final int REQUEST_IMAGE_CAPTURE = 2;
-    ImageView imageView;
-
     static final int TIME_DIALOG_ID = 1111;
-    private TextView view;
-    public Button btnClick;
+
+    private DrugsDatabase drugsDatabase;
+    private ImageView drugImage;
+    private TextView drugName;
+    private TextView outputTime;
     private int hr;
     private int min;
-
+    private TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
+        @Override
+        public void onTimeSet(TimePicker view, int hourOfDay, int minutes) {
+            hr = hourOfDay;
+            min = minutes;
+            updateTime(hr, min);
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_activity);
-        view = findViewById(R.id.output);
+
+        drugsDatabase = DrugsDatabase.getInMemoryDatabase(this);
+        drugImage = findViewById(R.id.imageView);
+        drugName = findViewById(R.id.editText);
+        outputTime = findViewById(R.id.output);
+
         final Calendar c = Calendar.getInstance();
         hr = c.get(Calendar.HOUR_OF_DAY);
         min = c.get(Calendar.MINUTE);
         updateTime(hr, min);
-        addButtonClickListener();
 
+        //wybierz zdjęcia z galerii
         Button choosePicture = findViewById(R.id.addPhoto);
         choosePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                choosePicture();
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
             }
         });
 
-        imageView = findViewById(R.id.imageView);
-
+        //zrób zdjęcie aparetem
         Button takePicture = findViewById(R.id.takePhoto);
         takePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                takePicture();
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                }
             }
         });
-    }
 
-    private void takePicture() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        }
-    }
-
-    private void choosePicture() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PICK_IMAGE) {
-            super.onActivityResult(requestCode, resultCode, data);
-            if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
-                imageView.setImageURI(data.getData());
-            }
-        }
-        if (requestCode == REQUEST_IMAGE_CAPTURE) {
-            if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-                Bundle extras = data.getExtras();
-                Bitmap imageBitmap = (Bitmap) extras.get("data");
-                imageView.setImageBitmap(imageBitmap);
-            }
-        }
-    }
-
-    public void addButtonClickListener() {
-        btnClick = (Button) findViewById(R.id.btnClick);
-        btnClick.setOnClickListener(new View.OnClickListener() {
+        //ustaw godzinę
+        Button setTime = findViewById(R.id.setTime);
+        setTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createdDialog(1111).show();
+            }
+        });
+
+        //dodaj do bazy danych
+        Button addButton = findViewById(R.id.addButton);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Drug drug = new Drug();
+                drug.setDrugName(drugName.getText().toString());
+                drugsDatabase.daoAccess().insertOnlySingleDrug(drug);
             }
         });
     }
@@ -111,24 +109,33 @@ public class AddActivity extends AppCompatActivity {
         return null;
     }
 
-    private TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
-        @Override
-        public void onTimeSet(TimePicker view, int hourOfDay, int minutes) {
-// TODO Auto-generated method stub
-            hr = hourOfDay;
-            min = minutes;
-            updateTime(hr, min);
-        }
-    };
-
-
     private void updateTime(int hours, int mins) {
         String minutes;
         if (mins < 10)
             minutes = "0" + mins;
         else
             minutes = String.valueOf(mins);
-        String aTime = new StringBuilder().append(hours).append(':').append(minutes).toString();
-        view.setText(aTime);
+        String aTime = String.valueOf(hours) + ':' + minutes;
+        outputTime.setText(aTime);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_IMAGE) {
+            super.onActivityResult(requestCode, resultCode, data);
+            if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
+                drugImage.setImageURI(data.getData());
+            }
+        }
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
+            if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+                Bundle extras = data.getExtras();
+                assert extras != null;
+                Bitmap imageBitmap = (Bitmap) extras.get("data");
+                drugImage.setImageBitmap(imageBitmap);
+            }
+        }
+    }
+
+
 }

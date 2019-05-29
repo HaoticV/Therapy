@@ -10,16 +10,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.example.therapy.MyApp;
+import com.example.therapy.R;
 import com.example.therapy.add.AddActivity;
 import com.example.therapy.database.DrugsDatabase;
 import com.example.therapy.description.ActivityDescription;
-import com.example.therapy.MyApp;
-import com.example.therapy.R;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements goToActivityable {
-    private DrugsDatabase mDb;
+    public static final String DATABASE_NAME = "drugs_db";
+    public DrugsDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements goToActivityable 
         RecyclerView.Adapter mAdapter = new MyAdapter(arrayList, this);
         recyclerView.setAdapter(mAdapter);
 
-        mDb = DrugsDatabase.getInMemoryDatabase(getApplicationContext());
+        mDb = Room.databaseBuilder(getApplicationContext(), DrugsDatabase.class, DATABASE_NAME).fallbackToDestructiveMigration().build();
 
         FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {

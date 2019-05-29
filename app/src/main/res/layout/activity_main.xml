@@ -16,7 +16,6 @@
         android:clickable="true"
         android:focusable="true"
         android:hapticFeedbackEnabled="false"
-        android:onClick="addActivity"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="40dp"
@@ -27,7 +26,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout_editor_absoluteX="94dp"
-        tools:layout_editor_absoluteY="37dp">
+        tools:layout_editor_absoluteY="37dp"
+        tools:listitem="@layout/row_table">
 
     </android.support.v7.widget.RecyclerView>
 </android.support.constraint.ConstraintLayout>

@@ -1,30 +1,26 @@
 package com.example.therapy.database;
 
-import android.arch.persistence.room.*;
-import android.support.annotation.NonNull;
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 
-@Entity
-public class Drugs {
-    @NonNull
-    @PrimaryKey
+@Entity(tableName = "drug")
+public class Drug {
+    @PrimaryKey(autoGenerate = true)
     private int drugId;
-    @ColumnInfo(name = "nazwa")
+    @ColumnInfo(name = "name")
     private String drugName;
-    @ColumnInfo(name = "opis")
+    @ColumnInfo(name = "description")
     private String drugDescription;
 
-    public Drugs(int drugId, String drugName, String drugDescription) {
-        this.drugId = drugId;
-        this.drugName = drugName;
-        this.drugDescription = drugDescription;
+    public Drug() {
     }
 
-    @NonNull
     public int getDrugId() {
         return drugId;
     }
 
-    public void setDrugId(@NonNull int drugId) {
+    public void setDrugId(int drugId) {
         this.drugId = drugId;
     }
 
@@ -43,4 +39,7 @@ public class Drugs {
     public void setDrugDescription(String drugDescription) {
         this.drugDescription = drugDescription;
     }
+
+
 }
+
