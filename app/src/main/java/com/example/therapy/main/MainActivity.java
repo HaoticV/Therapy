@@ -8,6 +8,7 @@ import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.example.therapy.MyApp;
@@ -30,6 +31,16 @@ public class MainActivity extends AppCompatActivity implements goToActivityable 
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.app_name);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
         ArrayList<Pair<Integer, String>> arrayList = new ArrayList<>();
         for (int i = 0; i < MyApp.SIZE; i++) {
@@ -53,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements goToActivityable 
         });
 
     }
+
 
     @Override
     public void goToWithId(int id) {

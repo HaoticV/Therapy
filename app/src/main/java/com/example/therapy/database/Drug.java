@@ -12,10 +12,30 @@ public class Drug {
     private int drugId;
     @ColumnInfo(name = "name")
     private String drugName;
+    @ColumnInfo(name = "image", typeAffinity = ColumnInfo.BLOB)
+    private byte[] drugImage;
     @ColumnInfo(name = "description")
     private String drugDescription;
+    @ColumnInfo(name = "time")
+    private String time;
 
     public Drug() {
+    }
+
+    public byte[] getDrugImage() {
+        return drugImage;
+    }
+
+    public void setDrugImage(byte[] drugImage) {
+        this.drugImage = drugImage;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public int getDrugId() {

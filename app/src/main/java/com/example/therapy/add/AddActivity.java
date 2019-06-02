@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import com.example.therapy.R;
 import com.example.therapy.database.Drug;
 import com.example.therapy.database.DrugsDatabase;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
 
 public class AddActivity extends AppCompatActivity {
@@ -96,6 +98,13 @@ public class AddActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Drug drug = new Drug();
                 drug.setDrugName(drugName.getText().toString());
+
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                Bitmap bitmap = ((BitmapDrawable) drugImage.getDrawable()).getBitmap();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                drug.setDrugImage(stream.toByteArray());
+
+                drug.setTime(outputTime.getText().toString());
                 drugsDatabase.daoAccess().insertOnlySingleDrug(drug);
             }
         });

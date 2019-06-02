@@ -21,6 +21,9 @@ public interface DaoAccess {
 
     @Query("SELECT * FROM drug WHERE name LIKE :name LIMIT 1")
     Drug findByName(String name);
+
+    @Query("SELECT * FROM drug")
+    List<Drug> findAllDrugs();
     @Update
     void updateDrug(Drug drug);
     @Delete
