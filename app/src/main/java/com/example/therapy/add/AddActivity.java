@@ -3,9 +3,12 @@ package com.example.therapy.add;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -20,7 +23,9 @@ import com.example.therapy.R;
 import com.example.therapy.database.Drug;
 import com.example.therapy.database.DrugsDatabase;
 
-import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Calendar;
 
 public class AddActivity extends AppCompatActivity {
@@ -99,15 +104,50 @@ public class AddActivity extends AppCompatActivity {
                 Drug drug = new Drug();
                 drug.setDrugName(drugName.getText().toString());
 
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                Bitmap bitmap = ((BitmapDrawable) drugImage.getDrawable()).getBitmap();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                drug.setDrugImage(stream.toByteArray());
+                Bitmap bitmap = Bitmap.createScaledBitmap(((BitmapDrawable) drugImage.getDrawable()).getBitmap(), 300, 300, true);
+                drug.setDrugImagePath(saveToInternalStorage(bitmap, drug.getDrugName()));
 
                 drug.setTime(outputTime.getText().toString());
                 drugsDatabase.daoAccess().insertOnlySingleDrug(drug);
             }
         });
+
+        Button testButton = findViewById(R.id.testButton);
+        testButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Drug drug = drugsDatabase.daoAccess().findByName("Test5");
+                drugName.setText(drug.getDrugName());
+                drugImage.setImageURI(Uri.parse(drug.getDrugImagePath()));
+                outputTime.setText(drug.getTime());
+
+
+            }
+        });
+    }
+
+    private String saveToInternalStorage(Bitmap bitmapImage, String name) {
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        // path to /data/data/yourapp/app_data/imageDir
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        // Create imageDir
+        File myPath = new File(directory, name + ".jpg");
+
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(myPath);
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fileOutputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return myPath.getAbsolutePath();
     }
 
     protected Dialog createdDialog(int id) {

@@ -5,7 +5,7 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
-@Database(entities = {Drug.class}, version = 4, exportSchema = false)
+@Database(entities = {Drug.class}, version = 8, exportSchema = false)
 public abstract class DrugsDatabase extends RoomDatabase{
 
     public abstract DaoAccess daoAccess();
