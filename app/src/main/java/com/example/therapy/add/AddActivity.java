@@ -185,6 +185,5 @@ public class AddActivity extends AppCompatActivity {
             }
         }
     }
-
-
 }
+

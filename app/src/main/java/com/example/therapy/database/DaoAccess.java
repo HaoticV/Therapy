@@ -24,6 +24,10 @@ public interface DaoAccess {
 
     @Query("SELECT * FROM drug")
     List<Drug> findAllDrugs();
+
+    @Query("SELECT COUNT(drugId) FROM drug")
+    int size();
+
     @Update
     void updateDrug(Drug drug);
     @Delete

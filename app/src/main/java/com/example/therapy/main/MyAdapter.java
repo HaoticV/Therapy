@@ -1,6 +1,6 @@
 package com.example.therapy.main;
 
-import android.support.v4.util.Pair;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,11 +10,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.therapy.R;
+import com.example.therapy.database.Drug;
 
-import java.util.ArrayList;
+import java.util.List;
 
 class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
-    private final ArrayList<Pair<Integer, String>> arrayList;
+    private final List<Drug> arrayList;
     private final goToActivityable mainActivity;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -28,7 +29,7 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         }
     }
 
-    public MyAdapter(ArrayList<Pair<Integer, String>> arrayList, goToActivityable mainActivity) {
+    public MyAdapter(List<Drug> arrayList, goToActivityable mainActivity) {
         this.arrayList = arrayList;
         this.mainActivity = mainActivity;
     }
@@ -47,8 +48,8 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 mainActivity.goToWithId(position);
             }
         });
-        myViewHolder.textView.setText(arrayList.get(position).second);
-        myViewHolder.imageView.setImageResource(arrayList.get(position).first);
+        myViewHolder.textView.setText(arrayList.get(position).getDrugName());
+        myViewHolder.imageView.setImageURI(Uri.parse(arrayList.get(position).getDrugImagePath()));
     }
 
     @Override

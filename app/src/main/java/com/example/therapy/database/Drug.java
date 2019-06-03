@@ -2,6 +2,7 @@ package com.example.therapy.database;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
@@ -20,6 +21,12 @@ public class Drug {
     private String time;
 
     public Drug() {
+    }
+
+    @Ignore
+    public Drug(String drugName, String drugImagePath) {
+        this.drugName = drugName;
+        this.drugImagePath = drugImagePath;
     }
 
     public String getDrugImagePath() {
