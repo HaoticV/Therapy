@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.therapy.MyApp;
 import com.example.therapy.R;
 
 public class ActivityDescription extends AppCompatActivity {
@@ -23,8 +22,8 @@ public class ActivityDescription extends AppCompatActivity {
 
         int id = getIntent().getIntExtra("id", 0);
 
-        nazwa.setText(MyApp.NAME[id]);
-        opis.setText(MyApp.DESRIPTION[id]);
-        obraz.setImageResource(MyApp.IMAGE.getResourceId(id, 0));
+        //nazwa.setText(MyApp.NAME[id]);
+        //opis.setText(MyApp.DESRIPTION[id]);
+        //obraz.setImageResource(MyApp.IMAGE.getResourceId(id, 0));
     }
 }
