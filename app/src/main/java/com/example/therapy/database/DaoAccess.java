@@ -13,6 +13,7 @@ public interface DaoAccess {
 
     @Insert
     void insertOnlySingleDrug(Drug drug);
+
     @Insert
     void insertMultipleDrugs(List<Drug> drugsList);
 
@@ -30,6 +31,7 @@ public interface DaoAccess {
 
     @Update
     void updateDrug(Drug drug);
+
     @Delete
     void deleteDrug(Drug drug);
 }

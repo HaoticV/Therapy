@@ -6,8 +6,10 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
+
 @Entity(tableName = "drug")
-public class Drug {
+public class Drug implements Serializable {
     @PrimaryKey(autoGenerate = true)
     @NonNull
     private int drugId;

@@ -14,8 +14,8 @@ import com.example.therapy.database.Drug;
 
 import java.util.List;
 
-class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
-    private final List<Drug> arrayList;
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+    private List<Drug> contentList;
     private final goToActivityable mainActivity;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -29,8 +29,8 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         }
     }
 
-    public MyAdapter(List<Drug> arrayList, goToActivityable mainActivity) {
-        this.arrayList = arrayList;
+    public MyAdapter(List<Drug> contentList, goToActivityable mainActivity) {
+        this.contentList = contentList;
         this.mainActivity = mainActivity;
     }
 
@@ -48,13 +48,12 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 mainActivity.goToWithId(position);
             }
         });
-        myViewHolder.textView.setText(arrayList.get(position).getDrugName());
-        myViewHolder.imageView.setImageURI(Uri.parse(arrayList.get(position).getDrugImagePath()));
+        myViewHolder.textView.setText(contentList.get(position).getDrugName());
+        myViewHolder.imageView.setImageURI(Uri.parse(contentList.get(position).getDrugImagePath()));
     }
 
     @Override
     public int getItemCount() {
-        return arrayList.size();
+        return contentList.size();
     }
-
 }

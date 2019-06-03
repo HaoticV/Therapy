@@ -8,7 +8,6 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -109,19 +108,13 @@ public class AddActivity extends AppCompatActivity {
 
                 drug.setTime(outputTime.getText().toString());
                 drugsDatabase.daoAccess().insertOnlySingleDrug(drug);
-            }
-        });
 
-        Button testButton = findViewById(R.id.testButton);
-        testButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Drug drug = drugsDatabase.daoAccess().findByName("Test5");
-                drugName.setText(drug.getDrugName());
-                drugImage.setImageURI(Uri.parse(drug.getDrugImagePath()));
-                outputTime.setText(drug.getTime());
-
-
+                Intent backIntent = new Intent();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("newDrug", drug);
+                backIntent.putExtras(bundle);
+                setResult(RESULT_OK, backIntent);
+                finish();
             }
         });
     }
@@ -170,8 +163,8 @@ public class AddActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE) {
-            super.onActivityResult(requestCode, resultCode, data);
             if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
                 drugImage.setImageURI(data.getData());
             }

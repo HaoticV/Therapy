@@ -1,6 +1,5 @@
 package com.example.therapy.main;
 
-import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -19,18 +18,20 @@ import com.example.therapy.description.ActivityDescription;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements goToActivityable {
-    public static final String DATABASE_NAME = "drugs_db";
-    public DrugsDatabase drugsDatabase;
+    static final int ADD_INTENT = 1;
+    private RecyclerView.Adapter mAdapter;
+    private List<Drug> contentList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(false);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
 
-        drugsDatabase = DrugsDatabase.getInMemoryDatabase(this);
+        DrugsDatabase drugsDatabase = DrugsDatabase.getInMemoryDatabase(this);
+        contentList = drugsDatabase.daoAccess().findAllDrugs();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.app_name);
@@ -43,26 +44,29 @@ public class MainActivity extends AppCompatActivity implements goToActivityable 
             }
         });
 
-
-        List<Drug> arrayList = drugsDatabase.daoAccess().findAllDrugs();
-
         recyclerView.setLayoutManager(layoutManager);
-        RecyclerView.Adapter mAdapter = new MyAdapter(arrayList, this);
+        mAdapter = new MyAdapter(contentList, this);
         recyclerView.setAdapter(mAdapter);
-
-        drugsDatabase = Room.databaseBuilder(getApplicationContext(), DrugsDatabase.class, DATABASE_NAME).fallbackToDestructiveMigration().build();
 
         FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, AddActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, ADD_INTENT);
             }
         });
-
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ADD_INTENT && resultCode == RESULT_OK) {
+            Bundle bundle = data.getExtras();
+            Drug drug = (Drug) bundle.getSerializable("newDrug");
+            contentList.add(drug);
+            mAdapter.notifyDataSetChanged();
+        }
+    }
 
     @Override
     public void goToWithId(int id) {
@@ -70,5 +74,5 @@ public class MainActivity extends AppCompatActivity implements goToActivityable 
         intent.putExtra("id", id);
         startActivity(intent);
     }
-
 }
+
