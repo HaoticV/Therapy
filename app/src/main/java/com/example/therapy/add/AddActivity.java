@@ -144,9 +144,8 @@ public class AddActivity extends AppCompatActivity {
     }
 
     protected Dialog createdDialog(int id) {
-        switch (id) {
-            case TIME_DIALOG_ID:
-                return new TimePickerDialog(this, timePickerListener, hr, min, true);
+        if (id == TIME_DIALOG_ID) {
+            return new TimePickerDialog(this, timePickerListener, hr, min, true);
         }
         return null;
     }
