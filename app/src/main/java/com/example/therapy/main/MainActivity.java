@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.therapy.R;
 import com.example.therapy.add.AddActivity;
@@ -21,12 +22,13 @@ public class MainActivity extends AppCompatActivity implements goToActivityable 
     static final int ADD_INTENT = 1;
     private RecyclerView.Adapter mAdapter;
     private List<Drug> contentList;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(false);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
 
@@ -65,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements goToActivityable 
             Drug drug = (Drug) bundle.getSerializable("newDrug");
             contentList.add(drug);
             mAdapter.notifyDataSetChanged();
+            Toast.makeText(this, "Dodano lek", Toast.LENGTH_SHORT).show();
         }
     }
 

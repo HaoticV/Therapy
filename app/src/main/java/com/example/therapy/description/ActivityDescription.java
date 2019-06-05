@@ -3,6 +3,7 @@ package com.example.therapy.description;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ public class ActivityDescription extends AppCompatActivity {
     TextView nazwa, opis;
     ImageView obraz;
     DrugsDatabase drugsDatabase;
+    ActionBar actionBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,5 +35,7 @@ public class ActivityDescription extends AppCompatActivity {
 
         nazwa.setText(list.get(id).getDrugName());
         obraz.setImageURI(Uri.parse(list.get(id).getDrugImagePath()));
+
+        actionBar = getSupportActionBar();
     }
 }
