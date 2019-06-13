@@ -15,7 +15,7 @@ import com.example.therapy.database.DrugsDatabase;
 import java.util.List;
 
 public class ActivityDescription extends AppCompatActivity {
-    TextView nazwa, opis;
+    TextView nazwa, opis, czas;
     ImageView obraz;
     DrugsDatabase drugsDatabase;
     ActionBar actionBar;
@@ -26,16 +26,20 @@ public class ActivityDescription extends AppCompatActivity {
         setContentView(R.layout.activity_description);
         nazwa = findViewById(R.id.nazwa);
         obraz = findViewById(R.id.obraz);
+        opis = findViewById(R.id.opis);
+        czas = findViewById(R.id.time_description);
 
         drugsDatabase = DrugsDatabase.getInMemoryDatabase(this);
 
         int id = getIntent().getIntExtra("id", 0);
-
         List<Drug> list = drugsDatabase.daoAccess().findAllDrugs();
+        Drug drug = list.get(id);
 
-        nazwa.setText(list.get(id).getDrugName());
-        obraz.setImageURI(Uri.parse(list.get(id).getDrugImagePath()));
+        nazwa.setText(drug.getDrugName());
+        obraz.setImageURI(Uri.parse(drug.getDrugImagePath()));
+        opis.setText(drug.getDrugDescription());
+        czas.setText(drug.getTime());
 
-        actionBar = getSupportActionBar();
+
     }
 }

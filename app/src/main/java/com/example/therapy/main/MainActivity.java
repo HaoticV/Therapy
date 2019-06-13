@@ -15,7 +15,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.therapy.R;
-import com.example.therapy.add.AddActivity;
+import com.example.therapy.alarm.Alarm;
 import com.example.therapy.database.Drug;
 import com.example.therapy.database.DrugsDatabase;
 import com.example.therapy.description.ActivityDescription;
@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity implements goToActivityable 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.app_name);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
-
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements goToActivityable 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AddActivity.class);
+                Intent intent = new Intent(MainActivity.this, Alarm.class);
                 startActivityForResult(intent, ADD_INTENT);
             }
         });
@@ -75,7 +74,8 @@ public class MainActivity extends AppCompatActivity implements goToActivityable 
             Bundle bundle = data.getExtras();
             Drug drug = (Drug) bundle.getSerializable("newDrug");
             contentList.add(drug);
-            mAdapter.notifyDataSetChanged();
+            recyclerView.smoothScrollToPosition(contentList.size() - 1);
+            mAdapter.notifyItemInserted(contentList.size() - 1);
             Toast.makeText(this, "Dodano lek", Toast.LENGTH_SHORT).show();
         }
     }
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements goToActivityable 
 
     @Override
     public void remove(int id) {
-        drug = drugsDatabase.daoAccess().fetchOneDrugbyDrugId(id + 1);
+        drug = drugsDatabase.daoAccess().fetchOneDrugbyDrugId(id);
         drugsDatabase.daoAccess().deleteDrug(drug);
     }
 

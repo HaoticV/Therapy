@@ -22,15 +22,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         return contentList;
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView textView;
-        public ImageView imageView;
-
-        public MyViewHolder(LinearLayout v) {
-            super(v);
-            textView = v.findViewById(R.id.row_name);
-            imageView = v.findViewById(R.id.row_image);
-        }
+    @Override
+    public void onBindViewHolder(MyViewHolder myViewHolder, final int position) {
+        myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainActivity.goToWithId(position);
+            }
+        });
+        myViewHolder.textView.setText(contentList.get(position).getDrugName());
+        myViewHolder.imageView.setImageURI(Uri.parse(contentList.get(position).getDrugImagePath()));
+        myViewHolder.timeView.setText(contentList.get(position).getTime());
     }
 
     public MyAdapter(List<Drug> contentList, goToActivityable mainActivity) {
@@ -44,16 +46,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         return vh;
     }
 
-    @Override
-    public void onBindViewHolder(MyViewHolder myViewHolder, final int position) {
-        myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mainActivity.goToWithId(position);
-            }
-        });
-        myViewHolder.textView.setText(contentList.get(position).getDrugName());
-        myViewHolder.imageView.setImageURI(Uri.parse(contentList.get(position).getDrugImagePath()));
+    public void removeItem(int position) {
+        mainActivity.remove(contentList.get(position).getDrugId());
+        contentList.remove(position);
+        notifyItemRemoved(position);
     }
 
     @Override
@@ -61,10 +57,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         return contentList.size();
     }
 
-    public void removeItem(int position) {
-        contentList.remove(position);
-        mainActivity.remove(position);
-        notifyItemRemoved(position);
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
+        public TextView textView;
+        public ImageView imageView;
+        public TextView timeView;
+
+        public MyViewHolder(LinearLayout v) {
+            super(v);
+            textView = v.findViewById(R.id.row_name);
+            imageView = v.findViewById(R.id.row_image);
+            timeView = v.findViewById(R.id.drug_time);
+        }
     }
 
     public void restoreItem(Drug item, int position) {

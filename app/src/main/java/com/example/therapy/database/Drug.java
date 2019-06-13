@@ -2,14 +2,13 @@ package com.example.therapy.database;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
 import java.io.Serializable;
 
 @Entity(tableName = "drug")
 public class Drug implements Serializable {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey()
     private int drugId;
     @ColumnInfo(name = "name")
     private String drugName;
@@ -21,12 +20,6 @@ public class Drug implements Serializable {
     private String time;
 
     public Drug() {
-    }
-
-    @Ignore
-    public Drug(String drugName, String drugImagePath) {
-        this.drugName = drugName;
-        this.drugImagePath = drugImagePath;
     }
 
     public String getDrugImagePath() {
@@ -68,7 +61,5 @@ public class Drug implements Serializable {
     public void setDrugDescription(String drugDescription) {
         this.drugDescription = drugDescription;
     }
-
-
 }
 

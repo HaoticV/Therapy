@@ -19,7 +19,14 @@
         <activity android:name=".description.ActivityDescription" />
         <activity android:name=".add.AddActivity"
                   android:label="Dodaj lek"/>
+        <activity
+            android:name=".alarm.Alarm"
+            android:label="Weź lek"
+            android:theme="@android:style/Theme.Holo.Light.Dialog" />
+
+        <receiver android:name=".alarm.AlarmReceiver" />
     </application>
     <uses-feature android:name="android.hardware.camera"
         android:required="false" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 </manifest>

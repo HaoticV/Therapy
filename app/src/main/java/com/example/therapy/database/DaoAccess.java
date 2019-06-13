@@ -23,11 +23,14 @@ public interface DaoAccess {
     @Query("SELECT * FROM drug WHERE name LIKE :name LIMIT 1")
     Drug findByName(String name);
 
-    @Query("SELECT * FROM drug")
+    @Query("SELECT * FROM drug ORDER BY time ASC")
     List<Drug> findAllDrugs();
 
     @Query("SELECT COUNT(drugId) FROM drug")
     int size();
+
+    @Query("SELECT MAX(drugId) FROM drug")
+    int maxId();
 
     @Update
     void updateDrug(Drug drug);

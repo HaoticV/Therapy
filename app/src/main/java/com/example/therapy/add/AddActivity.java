@@ -101,10 +101,11 @@ public class AddActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Drug drug = new Drug();
+                drug.setDrugId(drugsDatabase.daoAccess().maxId() + 1);
                 drug.setDrugName(drugName.getText().toString());
 
                 Bitmap bitmap = Bitmap.createScaledBitmap(((BitmapDrawable) drugImage.getDrawable()).getBitmap(), 300, 300, true);
-                drug.setDrugImagePath(saveToInternalStorage(bitmap, drug.getDrugName()));
+                drug.setDrugImagePath(saveToInternalStorage(bitmap, String.valueOf(drug.getDrugId())));
 
                 drug.setTime(outputTime.getText().toString());
                 drugsDatabase.daoAccess().insertOnlySingleDrug(drug);
@@ -152,11 +153,16 @@ public class AddActivity extends AppCompatActivity {
 
     private void updateTime(int hours, int mins) {
         String minutes;
+        String h;
+        if (hours < 10)
+            h = "0" + hours;
+        else
+            h = String.valueOf(hours);
         if (mins < 10)
             minutes = "0" + mins;
         else
             minutes = String.valueOf(mins);
-        String aTime = String.valueOf(hours) + ':' + minutes;
+        String aTime = h + ':' + minutes;
         outputTime.setText(aTime);
     }
 
