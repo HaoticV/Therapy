@@ -1,12 +1,16 @@
 package com.example.therapy.main;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.Toast;
 
@@ -20,9 +24,11 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements goToActivityable {
     static final int ADD_INTENT = 1;
-    private RecyclerView.Adapter mAdapter;
+    Drug drug = new Drug();
     private List<Drug> contentList;
     private RecyclerView recyclerView;
+    private MyAdapter mAdapter;
+    private DrugsDatabase drugsDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements goToActivityable 
         recyclerView.setHasFixedSize(false);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
 
-        DrugsDatabase drugsDatabase = DrugsDatabase.getInMemoryDatabase(this);
+        drugsDatabase = DrugsDatabase.getInMemoryDatabase(this);
         contentList = drugsDatabase.daoAccess().findAllDrugs();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -50,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements goToActivityable 
         mAdapter = new MyAdapter(contentList, this);
         recyclerView.setAdapter(mAdapter);
 
+        enableSwipeToDeleteAndUndo();
+
         FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements goToActivityable 
             }
         });
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -77,5 +86,51 @@ public class MainActivity extends AppCompatActivity implements goToActivityable 
         intent.putExtra("id", id);
         startActivity(intent);
     }
+
+    private void enableSwipeToDeleteAndUndo() {
+        SwipeToDelete swipeToDeleteCallback = new SwipeToDelete(this) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+
+
+                final int position = viewHolder.getAdapterPosition();
+                final Drug item = mAdapter.getContentList().get(position);
+
+                mAdapter.removeItem(position);
+
+
+                Snackbar snackbar = Snackbar
+                        .make(recyclerView, "Item was removed from the list.", Snackbar.LENGTH_LONG);
+                snackbar.setAction("UNDO", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        mAdapter.restoreItem(item, position);
+                        recyclerView.scrollToPosition(position);
+                    }
+                });
+
+                snackbar.setActionTextColor(Color.YELLOW);
+                snackbar.show();
+
+            }
+        };
+
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
+    }
+
+    @Override
+    public void remove(int id) {
+        drug = drugsDatabase.daoAccess().fetchOneDrugbyDrugId(id + 1);
+        drugsDatabase.daoAccess().deleteDrug(drug);
+    }
+
+    @Override
+    public void undo(int id) {
+        drugsDatabase.daoAccess().insertOnlySingleDrug(drug);
+    }
+
+
 }
 

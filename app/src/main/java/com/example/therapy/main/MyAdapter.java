@@ -18,6 +18,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private List<Drug> contentList;
     private final goToActivityable mainActivity;
 
+    public List<Drug> getContentList() {
+        return contentList;
+    }
+
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView textView;
         public ImageView imageView;
@@ -55,5 +59,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @Override
     public int getItemCount() {
         return contentList.size();
+    }
+
+    public void removeItem(int position) {
+        contentList.remove(position);
+        mainActivity.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void restoreItem(Drug item, int position) {
+        contentList.add(position, item);
+        mainActivity.undo(position);
+        notifyItemInserted(position);
     }
 }
