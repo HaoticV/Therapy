@@ -1,4 +1,4 @@
-package com.example.therapy.add;
+package com.example.therapy.description;
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -10,6 +10,7 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -30,7 +31,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
 
-public class AddActivity extends AppCompatActivity {
+public class EditActivity extends AppCompatActivity {
     static final int PICK_IMAGE = 1;
     static final int REQUEST_IMAGE_CAPTURE = 2;
     static final int TIME_DIALOG_ID = 1111;
@@ -41,6 +42,8 @@ public class AddActivity extends AppCompatActivity {
     private TextView outputTime;
     private int hr;
     private int min;
+    private int id;
+
     private TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minutes) {
@@ -55,15 +58,17 @@ public class AddActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_activity);
 
+        id = getIntent().getIntExtra("id", 0);
         drugsDatabase = DrugsDatabase.getInMemoryDatabase(this);
         drugImage = findViewById(R.id.imageView);
         drugName = findViewById(R.id.editText);
         outputTime = findViewById(R.id.output);
 
-        final Calendar c = Calendar.getInstance();
-        hr = c.get(Calendar.HOUR_OF_DAY);
-        min = c.get(Calendar.MINUTE);
-        updateTime(hr, min);
+        drugsDatabase = DrugsDatabase.getInMemoryDatabase(this);
+        Drug drug = drugsDatabase.daoAccess().fetchOneDrugByDrugId(id);
+        drugImage.setImageURI(Uri.parse(drug.getDrugImagePath()));
+        drugName.setText(drug.getDrugName());
+        outputTime.setText(drug.getTime());
 
         //wybierz zdjęcia z galerii
         Button choosePicture = findViewById(R.id.addPhoto);
@@ -100,6 +105,7 @@ public class AddActivity extends AppCompatActivity {
 
         //dodaj do bazy danych
         Button addButton = findViewById(R.id.addButton);
+        addButton.setText("Zmień");
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

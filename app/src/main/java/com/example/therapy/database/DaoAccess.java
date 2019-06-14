@@ -18,7 +18,10 @@ public interface DaoAccess {
     void insertMultipleDrugs(List<Drug> drugsList);
 
     @Query("SELECT * FROM drug WHERE drugId = :drugId")
-    Drug fetchOneDrugbyDrugId(int drugId);
+    Drug fetchOneDrugByDrugId(int drugId);
+
+    @Query("SELECT * FROM drug WHERE time = :time")
+    List<Drug> fetchDrugsByTime(String time);
 
     @Query("SELECT * FROM drug WHERE name LIKE :name LIMIT 1")
     Drug findByName(String name);

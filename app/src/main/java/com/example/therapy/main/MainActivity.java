@@ -15,7 +15,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.therapy.R;
-import com.example.therapy.alarm.Alarm;
+import com.example.therapy.add.AddActivity;
 import com.example.therapy.database.Drug;
 import com.example.therapy.database.DrugsDatabase;
 import com.example.therapy.description.ActivityDescription;
@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity implements goToActivityable 
     private RecyclerView recyclerView;
     private MyAdapter mAdapter;
     private DrugsDatabase drugsDatabase;
+
+    int idDrug;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +63,11 @@ public class MainActivity extends AppCompatActivity implements goToActivityable 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Alarm.class);
+                Intent intent = new Intent(MainActivity.this, AddActivity.class);
                 startActivityForResult(intent, ADD_INTENT);
             }
         });
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -78,13 +79,23 @@ public class MainActivity extends AppCompatActivity implements goToActivityable 
             mAdapter.notifyItemInserted(contentList.size() - 1);
             Toast.makeText(this, "Dodano lek", Toast.LENGTH_SHORT).show();
         }
+        if (requestCode == 11) {
+            Bundle bundle = data.getExtras();
+            Drug drug = (Drug) bundle.getSerializable("newDrug");
+            drugsDatabase.daoAccess().deleteDrug(drugsDatabase.daoAccess().fetchOneDrugByDrugId(drug.getDrugId()));
+            drugsDatabase.daoAccess().insertOnlySingleDrug(drug);
+            contentList.remove(idDrug);
+            contentList.add(drug);
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
     public void goToWithId(int id) {
+        idDrug = id;
         Intent intent = new Intent(this, ActivityDescription.class);
         intent.putExtra("id", id);
-        startActivity(intent);
+        startActivityForResult(intent, 11);
     }
 
     private void enableSwipeToDeleteAndUndo() {
@@ -122,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements goToActivityable 
 
     @Override
     public void remove(int id) {
-        drug = drugsDatabase.daoAccess().fetchOneDrugbyDrugId(id);
+        drug = drugsDatabase.daoAccess().fetchOneDrugByDrugId(id);
         drugsDatabase.daoAccess().deleteDrug(drug);
     }
 
@@ -130,7 +141,6 @@ public class MainActivity extends AppCompatActivity implements goToActivityable 
     public void undo(int id) {
         drugsDatabase.daoAccess().insertOnlySingleDrug(drug);
     }
-
 
 }
 

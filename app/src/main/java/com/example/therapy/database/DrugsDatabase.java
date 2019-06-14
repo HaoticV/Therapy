@@ -35,7 +35,7 @@ public abstract class DrugsDatabase extends RoomDatabase{
         if (INSTANCE == null) {
             INSTANCE =
                     Room.databaseBuilder(context.getApplicationContext(), DrugsDatabase.class, DATABASE_NAME)
-                            .allowMainThreadQueries().fallbackToDestructiveMigration()
+                            .allowMainThreadQueries().addMigrations(MIGRATION_2_1, MIGRATION_1_2)
                             .build();
         }
         return INSTANCE;
